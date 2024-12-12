@@ -1,6 +1,10 @@
 namespace MiniProj;
 
 public class GameManager{
+
+        private static readonly string D = "the DEALER";
+        private static readonly string Y = "YOU";
+        private static readonly string N = "NO ONE"; 
     /*
     Play game method responsible for controlling logic of a game of Blackjack. Process will terminate is either "Player" goes over 21 or if both players choose to stay.
     If either goes over 21, then the other player is the winner. If both players stay, then the larger score wins; with ties possible. The player can choose to hit,
@@ -16,6 +20,7 @@ public class GameManager{
         - ...
     */
     public static string PlayGame(){
+
         int playerScore = 0;
         int dealerScore = 0;
         bool isPlayer = false;
@@ -33,20 +38,22 @@ public class GameManager{
                 Console.WriteLine("Enter 1 to Hit, Enter 2 to Stay, Enter 3 to Quit");
                 
                 string? choice = Console.ReadLine();
-                switch(Convert.ToInt32(choice)){
-                    case 1:  
+                switch(choice){
+                    case "1":  
                         int card = Dealer.DealCard(isPlayer);
                         playerScore += card;
                         break;
-                    case 2:
+                    case "2":
                         playerStayed = true;
                         break;
-                    case 3:
-                        return "DEALER";
+                    case "3":
+                        return D;
                     default:
                         isPlayer = !isPlayer;
                         Console.WriteLine("\n");
-                        Console.WriteLine("invalid option");
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("INVALID OPTION");
+                        Console.ResetColor();
                         break;
                 }
                 
@@ -61,10 +68,10 @@ public class GameManager{
                 }
             } 
             if (playerScore > 21){
-                return "the DEALER";
+                return D;
             }
             if (dealerScore > 21){
-                return "YOU";
+                return Y;
             }
 
             isPlayer = !isPlayer;
@@ -72,12 +79,12 @@ public class GameManager{
         }
         
         if (dealerScore == playerScore){
-            return "NO ONE";
+            return N;
         }
         else if (dealerScore > playerScore){
-            return "the DEALER";
+            return D;
         } else{
-            return "YOU";
+            return Y;
         }
     }
 }

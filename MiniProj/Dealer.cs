@@ -21,8 +21,8 @@ public class Dealer {
     public static int DealCard(bool isPlayer){
         string currPlayer = isPlayer ? "YOU" : "The DEALER"; 
         Random ran = new();
-        int randomNumber = ran.Next(1,12);
-        Cards selectedCard = (Cards)(randomNumber - 1);
+        int randomNumber = ran.Next(0,11);
+        Cards selectedCard = (Cards)randomNumber;
         Console.WriteLine($"{currPlayer} drew a {selectedCard}");
         return randomNumber;
     }
