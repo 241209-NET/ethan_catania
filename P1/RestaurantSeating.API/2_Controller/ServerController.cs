@@ -7,16 +7,39 @@ namespace RestaurantSeating.API.Controller;
 [Route("api/[controller]")]
 [ApiController]
 
-public class ServerController : ControllerBase {
-    private readonly IServerService _serverService;
+public class ServerController(IServerService serverService) : ControllerBase {
+    private readonly IServerService _serverService = serverService;
 
-    public ServerController(IServerService serverService) 
-        => _serverService = serverService; 
-    
     [HttpGet]
 
     public IActionResult GetAllServers(){
         var serverList = _serverService.GetAllServers();
         return Ok(serverList);
     }
+
+    [HttpGet]
+    [Route("{id}")]
+    public IActionResult GetServerById(int id){
+        var server = _serverService.GetServerById(id);
+        if (server != null)
+        {
+            return Ok(server);
+        }
+        return NotFound("Could Not Find Server");
+    }
+
+    [HttpGet]
+    [Route("AVAILABLE")]
+    public IActionResult GetAvailableServers(){
+        var serverList = _serverService.GetAvailableServers();
+        return Ok(serverList);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> CreateNewServer([FromBody] Server newServer){
+        var s = await _serverService.CreateNewServer(newServer);
+        return Ok($"Successfully Created Server {s.Id_PK}"); 
+    }
+
+
 }

@@ -1,28 +1,35 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using RestaurantSeating.API.Model;
 using RestaurantSeating.API.Repository;
+using RestaurantSeating.API.Exceptions;
 
 namespace RestaurantSeating.API.Service;
 
-public class ServerService : IServerService
+public class ServerService(IServerRepository serverRepository) : IServerService
 {
+    private readonly IServerRepository _serverRepository = serverRepository;
+
     public Task<Server> CreateNewServer(Server server)
     {
-        throw new NotImplementedException();
+        if(_serverRepository.GetServerById(server.Id_PK) != null)
+            throw new AlreadyExistsException("Server already exists");
+
+        
+        return _serverRepository.CreateNewServer(server);
     }
 
     public IEnumerable<Server> GetAllServers()
     {
-        throw new NotImplementedException();
+        return _serverRepository.GetAllServers();
     }
 
     public IEnumerable<Server> GetAvailableServers()
     {
-        throw new NotImplementedException();
+        return _serverRepository.GetAvailableServers();
     }
 
-    public int GetGuestTotalById(int id)
+    public Server GetServerById(int id)
     {
-        throw new NotImplementedException();
+        return _serverRepository.GetServerById(id) ?? throw new DoesNotExistException("Server does not exist");
     }
 }

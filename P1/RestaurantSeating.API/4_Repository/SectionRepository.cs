@@ -4,25 +4,66 @@ using RestaurantSeating.API.Model;
 
 namespace RestaurantSeating.API.Repository;
 
-public class SectionRepository : ISectionRepository
+public class SectionRepository(RestaurantContext context) : ISectionRepository
 {
+
+    private readonly RestaurantContext _context = context;
+
     public Task<Section> CreateNewSection(Section section)
     {
-        throw new NotImplementedException();
+        _context.Add(section);
+        _context.SaveChanges();
+        return Task.FromResult(section);
+        
     }
 
     public void DeleteSectionById(int id)
     {
-        throw new NotImplementedException();
+        var section = GetSectionById(id);
+        _context.Remove(section!);
+        _context.SaveChanges();
     }
 
     public IEnumerable<Section> GetAllSections()
     {
-        throw new NotImplementedException();
+        return _context.Sections.ToList();
     }
 
     public IEnumerable<Table> GetTablesInSection(int id)
     {
-        throw new NotImplementedException();
+        return _context.Tables.Where(t => t.Table_numPK == id)
+                              .ToList();
     }
+
+    public Section? GetSectionById(int id)
+    {
+        return _context.Sections.Find(id);
+    }
+
+    public List<int> GetSectionsWithOpenTables()
+    {
+        return _context.Sections
+                    .Where(s => s.Tables.Any(t => t.Status == "OPEN"))
+                    .Select(s => s.Id_PK)
+                    .ToList();
+    }
+
+    public Section UpdateServer(int id, int server)
+    {
+        var s = GetSectionById(id);
+        s!.Server_FK = server;
+        _context.Update(s);
+        _context.SaveChanges();
+        return s;
+    }
+
+    public Section UpdateAccess(int id, string[] access)
+    {
+        var s = GetSectionById(id);
+        s!.Access = access;
+        _context.Update(s);
+        _context.SaveChanges();
+        return s;
+    }
+
 }

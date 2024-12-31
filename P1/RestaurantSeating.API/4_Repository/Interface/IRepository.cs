@@ -11,9 +11,11 @@ public interface ITableRepository{
 
     Table? GetTableById(int id);
 
-    Table UpdateTableStatus(string status);
+    Table UpdateTableStatus(Table table);
 
     void DeleteTableById(int id);
+
+    Table UpdateServer(Table table);
     
 }
 
@@ -25,7 +27,15 @@ public interface ISectionRepository{
 
     IEnumerable<Table> GetTablesInSection(int id);
 
+    List<int> GetSectionsWithOpenTables();
+
     void DeleteSectionById(int id);
+
+    Section? GetSectionById(int id);
+
+    Section UpdateServer(int id, int server);
+
+    Section UpdateAccess(int id, string[] access);
 
 }
 public interface IServerRepository{
@@ -36,8 +46,10 @@ public interface IServerRepository{
 
     IEnumerable<Server> GetAvailableServers();
 
-    int GetGuestTotalById(int id);
-    
+    int GetCurrNumTables(int id);
+
+    Server? GetServerById(int id);
+
 
 }
 

@@ -8,9 +8,11 @@ public interface ITableService{
 
     IEnumerable<Table> GetAllTables();
 
-    Table? GetTableById(int id);
+    Table GetTableById(int id);
 
-    Table UpdateTableStatus(string status);
+    Table UpdateTableStatus(Table table);
+
+    Table UpdateServer(Table table);
 
     void DeleteTableById(int id);
 }
@@ -25,6 +27,14 @@ public interface ISectionService{
 
     void DeleteSectionById(int id);
 
+    Section GetSectionById(int id);
+
+    List<int> GetSectionsWithOpenTables();
+
+    Section UpdateServer(int id ,int server);
+
+    Section UpdateAccess(int id, string[] access);
+
 }
 public interface IServerService{
 
@@ -34,5 +44,5 @@ public interface IServerService{
 
     IEnumerable<Server> GetAvailableServers();
 
-    int GetGuestTotalById(int id);
+    Server GetServerById(int id);
 }
