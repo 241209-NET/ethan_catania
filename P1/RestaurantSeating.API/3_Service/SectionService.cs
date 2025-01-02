@@ -13,11 +13,9 @@ public class SectionService(ISectionRepository sectionRepository, IServerReposit
 
     private readonly List<string> allowed = [ "BOOTH", "WHEELCHAIR", "TABLE" ];
 
-    public Task<Section> CreateNewSection(Section section)
+    public Section CreateNewSection(Section section)
     {
-        if(_sectionRepository.GetSectionById(section.Id_PK) != null)
-            throw new AlreadyExistsException("Section already exists");
-
+        
         if (section.Access != null)
         {
             foreach (var a in section.Access)
@@ -43,19 +41,19 @@ public class SectionService(ISectionRepository sectionRepository, IServerReposit
          _sectionRepository.DeleteSectionById(id);
     }
 
-    public IEnumerable<Section> GetAllSections()
+    public List<Section> GetAllSections()
     {
         return _sectionRepository.GetAllSections();
     }
 
-    public IEnumerable<Table> GetTablesInSection(int id)
+    public List<Table> GetTablesInSection(int id) 
     {
         GetSectionById(id); //Will throw exception if section does not exist
 
         return _sectionRepository.GetTablesInSection(id);
     }
 
-    public List<int> GetSectionsWithOpenTables()
+    public List<int> GetSectionsWithOpenTables() 
     {
         return _sectionRepository.GetSectionsWithOpenTables();
     }
@@ -67,10 +65,15 @@ public class SectionService(ISectionRepository sectionRepository, IServerReposit
 
     public Section UpdateServer(int id ,int server)
     {
-        GetSectionById(id); //Will throw exception if section does not exist   
+        GetSectionById(id); //Will throw exception if section does not exist  
+
+        if(server < 0)
+            throw new InvalidServerIdException("Invalid server id"); 
 
         if(_serverRepository.GetServerById(server) == null)
             throw new DoesNotExistException("Server does not exist");
+
+        
 
         return _sectionRepository.UpdateServer(id,server);
     }

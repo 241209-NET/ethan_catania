@@ -33,9 +33,13 @@ public class SectionController : ControllerBase {
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateNewSection([FromBody] Section newSection){
-        var s = await _sectionService.CreateNewSection(newSection);
-        return Ok($"Successfully Created Section {s.Id_PK}"); 
+    public IActionResult CreateNewSection([FromBody] PostSectionDto newSection){
+        var s =  _sectionService.CreateNewSection(
+            new Section(
+                newSection.Num_tables,
+                newSection.Server_FK,
+                 newSection.Access));
+        return Ok($"Successfully Created Section"); 
     }
 
     [HttpDelete]

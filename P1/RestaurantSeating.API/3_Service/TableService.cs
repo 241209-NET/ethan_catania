@@ -9,34 +9,39 @@ public class TableService : ITableService
 {
     private readonly ITableRepository _tableRepository;
 
-    private readonly List<string> allowed =  [ "OPEN", "OCCUPIED", "RESERVED" ];
+    private readonly List<string> allowedStatus =  [ "OPEN", "OCCUPIED", "RESERVED" ];
+    private readonly List<string> allowedAccess =  [ "WHEELCHAIR", "BOOTH", "TABLE" ];
 
     public TableService(ITableRepository tableRepository)
         => _tableRepository = tableRepository;
 
-    public Task<Table> CreateNewTable(Table newTable)
+    public Table CreateNewTable(Table newTable)
     {
-        if(_tableRepository.GetTableById(newTable.Table_numPK) != null)
-            throw new AlreadyExistsException("Table already exists");
-
         if(newTable.Table_numPK < 0 )
             throw new InvalidIdException("Invalid ID");
 
-        if(!allowed.Contains(newTable.Status) && newTable.Status != null)
+        if (!allowedStatus.Contains(newTable.Status))
             throw new InvalidStatusException("Invalid status");
 
-        if(newTable.Num_seats < 0 || newTable.Num_seats > 8)
-            throw new InvalidNumSeatsException("Invalid capacity");
+        if (newTable.Access != null)
+        {
+            foreach (var a in newTable.Access)
+            {
+                if (!allowedAccess.Contains(a))
+                    throw new InvalidAccessException("Invalid access");
+            }
+        }
 
-//NOT SURE ABOUT CREEATING TABLES WITHOUT A SERVER OR SECTION ASSIGNED 
+        if(newTable.Num_seats < 0 || newTable.Num_seats > 8)
+            throw new InvalidNumSeatsException("Invalid capacity"); 
 
         return _tableRepository.CreateNewTable(newTable);
     }
 
 // 0 OR MANY TABLES
-    public IEnumerable<Table> GetAllTables()
+    public List<Table> GetAllTables()
     {
-        return _tableRepository.GetAllTables();
+        return _tableRepository.GetAllTables().ToList();
     }
 
     public void DeleteTableById(int id)
@@ -52,21 +57,21 @@ public class TableService : ITableService
         return _tableRepository.GetTableById(id) ?? throw new DoesNotExistException("Table does not exist");
     }
 
-    public Table UpdateTableStatus(Table table)
+    public Table UpdateTableStatus(int id, string status)
     {
-        GetTableById(table.Table_numPK); // IF NULL EXCEPTION WILL BE THROWN
+        GetTableById(id); // IF NULL EXCEPTION WILL BE THROWN
 
-        if (!allowed.Contains(table.Status)) throw new Exception("Invalid status");
+        if (!allowedStatus.Contains(status)) throw new InvalidStatusException("Invalid status");
 
-        return _tableRepository.UpdateTableStatus(table)!;
+        return _tableRepository.UpdateTableStatus(id, status)!;
     }
 
-    public Table UpdateServer(Table table)
+    public Table UpdateServer(int id, int server)
     {
-        GetTableById(table.Table_numPK); // IF NULL EXCEPTION WILL BE THROWN
+        GetTableById(id); // IF NULL EXCEPTION WILL BE THROWN
 
-        if(table.Server_FK < 0) throw new InvalidIdException("Invalid ID");
+        if(server < 0) throw new InvalidIdException("Invalid ID");
 
-        return _tableRepository.UpdateServer(table)!;
+        return _tableRepository.UpdateServer(id,server)!;
     }
 }

@@ -9,11 +9,11 @@ public class SectionRepository(RestaurantContext context) : ISectionRepository
 
     private readonly RestaurantContext _context = context;
 
-    public Task<Section> CreateNewSection(Section section)
+    public Section CreateNewSection(Section section)
     {
         _context.Add(section);
         _context.SaveChanges();
-        return Task.FromResult(section);
+        return section;
         
     }
 
@@ -24,12 +24,12 @@ public class SectionRepository(RestaurantContext context) : ISectionRepository
         _context.SaveChanges();
     }
 
-    public IEnumerable<Section> GetAllSections()
+    public List<Section> GetAllSections()
     {
         return _context.Sections.ToList();
     }
 
-    public IEnumerable<Table> GetTablesInSection(int id)
+    public List<Table> GetTablesInSection(int id)
     {
         return _context.Tables.Where(t => t.Table_numPK == id)
                               .ToList();

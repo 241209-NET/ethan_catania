@@ -43,14 +43,9 @@ By Ethan Catania
 * Ability to remove servers from the table chart
 * Abiltiy to assign any table to any server
 
-* Ability to track the total guests present in each section
 
 ## *Stretch Goals*
 * Ability to have customizable access criteria (booth, wheelchair accessibility, etc.)
 * Ability to reserve multiple tables for the future
 * Next table to seat recommendations
-
-## *Endpoints*
-
-* TBD
 

@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using RestaurantSeating.API.Model;
 using RestaurantSeating.API.Service;
+using RestaurantSeating.API.Utilities;
 
 namespace RestaurantSeating.API.Controller;
 
@@ -30,9 +31,14 @@ public class TableController(ITableService tableService) : ControllerBase
     }
     [HttpPost]
     //PROB NEED DTO !!!!!~
-    public async Task<IActionResult> CreateNewTable([FromBody] Table newTable){
-        var t = await _tableService.CreateNewTable(newTable);
-        return Ok($"Successfully Created Table {t.Table_numPK}"); 
+    public  IActionResult CreateNewTable([FromBody] PostTableDto newTable){
+        var t =  _tableService.CreateNewTable(
+            new Table(  newTable.Status,
+                        newTable.Section_FK,
+                        newTable.Access,
+                        newTable.Num_seats, 
+                        newTable.Server_FK));
+        return Ok($"Successfully Created New Table"); 
     }
     [HttpDelete]
     [Route("{id}")]
@@ -46,10 +52,21 @@ public class TableController(ITableService tableService) : ControllerBase
         return NotFound("Could Not Find Table");
     }
     [HttpPatch]
+    [Route("STATUS")]
 
-//NEED TO CHECK DELETE AND PATCH 
-    public IActionResult UpdateTableStatus([FromBody] Table table){
-        var updatedTable = _tableService.UpdateTableStatus(table);
+    public IActionResult UpdateTableStatus([FromBody] UpdateStatusDto Dto){
+        var updatedTable = _tableService.UpdateTableStatus(Dto.Id_PK, Dto.Status);
+        if (updatedTable != null)
+        {
+            return Ok($"Successfully Updated Table {updatedTable.Table_numPK}");
+        }
+        return NotFound("Could Not Find Table");
+    }
+
+    [HttpPatch]
+    [Route("SERVER")]
+    public IActionResult UpdateServer([FromBody] UpdateServerDto Dto){
+        var updatedTable = _tableService.UpdateServer(Dto.Id_PK, Dto.Server_FK);
         if (updatedTable != null)
         {
             return Ok($"Successfully Updated Table {updatedTable.Table_numPK}");

@@ -4,26 +4,26 @@ namespace RestaurantSeating.API.Service;
 
 public interface ITableService{
     
-    Task<Table> CreateNewTable(Table newTable);
+    Table CreateNewTable(Table newTable);
 
-    IEnumerable<Table> GetAllTables();
+    List<Table> GetAllTables();
 
     Table GetTableById(int id);
 
-    Table UpdateTableStatus(Table table);
+    Table UpdateTableStatus(int id, string status);
 
-    Table UpdateServer(Table table);
+    Table UpdateServer(int id, int server);
 
     void DeleteTableById(int id);
 }
 
 public interface ISectionService{
 
-    Task<Section> CreateNewSection(Section section);
+    Section CreateNewSection(Section section);
 
-    IEnumerable<Section> GetAllSections();
+    List<Section> GetAllSections();
 
-    IEnumerable<Table> GetTablesInSection(int id);
+    List<Table> GetTablesInSection(int id);
 
     void DeleteSectionById(int id);
 
@@ -38,11 +38,11 @@ public interface ISectionService{
 }
 public interface IServerService{
 
-    Task<Server> CreateNewServer(Server server);
+    Server CreateNewServer(Server server);
 
-    IEnumerable<Server> GetAllServers();
+    List<Server> GetAllServers();
 
-    IEnumerable<Server> GetAvailableServers();
+    List<Server> GetAvailableServers();
 
     Server GetServerById(int id);
 }

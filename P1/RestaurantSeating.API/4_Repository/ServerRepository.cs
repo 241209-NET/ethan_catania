@@ -8,14 +8,14 @@ public class ServerRepository(RestaurantContext context) : IServerRepository
 {
     private readonly RestaurantContext _context = context;
 
-    public Task<Server> CreateNewServer(Server server)
+    public Server CreateNewServer(Server server)
     {
         _context.Add(server);
         _context.SaveChanges();
-        return Task.FromResult(server);   
+        return server;   
     }
 
-    public IEnumerable<Server> GetAllServers()
+    public List<Server> GetAllServers()
     {
         return _context.Servers.ToList();
     }
@@ -25,14 +25,9 @@ public class ServerRepository(RestaurantContext context) : IServerRepository
         return _context.Servers.Find(id);
     }
 
-    public IEnumerable<Server> GetAvailableServers()
+    public List<Server> GetAvailableServers()
     {
        return _context.Servers.Where(s => s.IsAvailable).ToList();
     }
     
-    public int GetCurrNumTables(int id)
-    {
-        return _context.Tables.Where(t => t.Server_FK == id).Count();
-    }
-
 }

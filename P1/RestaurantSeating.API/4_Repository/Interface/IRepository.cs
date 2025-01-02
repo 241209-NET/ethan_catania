@@ -5,27 +5,27 @@ namespace RestaurantSeating.API.Repository;
 
 public interface ITableRepository{
 
-    Task<Table> CreateNewTable(Table newTable);
+    Table CreateNewTable(Table newTable);
 
-    IEnumerable<Table> GetAllTables();
+    List<Table> GetAllTables();
 
     Table? GetTableById(int id);
 
-    Table UpdateTableStatus(Table table);
+    Table UpdateTableStatus(int id, string status);
 
     void DeleteTableById(int id);
 
-    Table UpdateServer(Table table);
+    Table UpdateServer(int id ,int server);
     
 }
 
 public interface ISectionRepository{
 
-    Task<Section> CreateNewSection(Section section);
+    Section CreateNewSection(Section section);
 
-    IEnumerable<Section> GetAllSections();
+    List<Section> GetAllSections();
 
-    IEnumerable<Table> GetTablesInSection(int id);
+    List<Table> GetTablesInSection(int id);
 
     List<int> GetSectionsWithOpenTables();
 
@@ -40,13 +40,11 @@ public interface ISectionRepository{
 }
 public interface IServerRepository{
 
-    Task<Server> CreateNewServer(Server server);
+    Server CreateNewServer(Server server);
 
-    IEnumerable<Server> GetAllServers();
+    List<Server> GetAllServers();
 
-    IEnumerable<Server> GetAvailableServers();
-
-    int GetCurrNumTables(int id);
+    List<Server> GetAvailableServers();
 
     Server? GetServerById(int id);
 

@@ -36,9 +36,9 @@ public class ServerController(IServerService serverService) : ControllerBase {
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateNewServer([FromBody] Server newServer){
-        var s = await _serverService.CreateNewServer(newServer);
-        return Ok($"Successfully Created Server {s.Id_PK}"); 
+    public  IActionResult CreateNewServer([FromBody] PostServerDto newServer){
+        var s = _serverService.CreateNewServer(new Server(newServer.Name, newServer.IsAvailable));
+        return Ok($"Successfully Created Server {s.Name}"); 
     }
 
 
